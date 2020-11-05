@@ -89,7 +89,7 @@ public final class Lexer {
       $line=60;
       Object states=$fix(GCollections.asSet("I"));
       $line=61;
-      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END"));
+      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips"));
       $line=62;
       for (Object $v1:GCollections.unmodifiableCollection(keywords)) {
         Object token=$v1;
@@ -131,7 +131,7 @@ public final class Lexer {
     Object $result=null;
     $try:try {
       $line=80;
-      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END"));
+      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips"));
       $line=81;
       Object unary=$fix(GCollections.asSet("move","turn","face","moveDir","facing","not"));
       $line=82;
@@ -157,7 +157,7 @@ public final class Lexer {
         }
         else {
           $line=88;
-          if (($opEqualY(q,"I")&&$opMembrY(\u03C3,GCollections.asSet('R','V','B','a','m','t','f','p','s','n','E')))) {
+          if (($opEqualY(q,"I")&&$opMembrY(\u03C3,GCollections.asSet('R','V','B','a','m','t','f','p','s','n','E','L','R','N','S','W','E','A','B','C')))) {
             $line=88;
             $result=$invokeMethod(String.class,"valueOf",true,null,new Object[]{\u03C3});
             if (true) break $try;
@@ -242,7 +242,7 @@ public final class Lexer {
       $line=108;
       s=$cast(String.class,$fix(""));
       $line=109;
-      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END"));
+      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips"));
       $line=111;
       if ((!$opMembrY(q,GCollections.asSet("Err"))&&$opMembrY(\u03C3,GCollections.asSet('(',')',' ',';','{','}','[',']',',')))) {
         $line=112;
@@ -362,16 +362,88 @@ public final class Lexer {
                                         if (true) break $try;
                                       }
                                       else {
-                                        $line=130;
-                                        if ($opEqualY(q,"Num")) {
-                                          $line=130;
-                                          $result=$opAdditY("n",s);
+                                        $line=129;
+                                        if ($opEqualY(q,"left")) {
+                                          $line=129;
+                                          $result=$opAdditY("L",s);
                                           if (true) break $try;
                                         }
                                         else {
-                                          $line=131;
-                                          $result=$opAdditY("v",s);
-                                          if (true) break $try;
+                                          $line=130;
+                                          if ($opEqualY(q,"right")) {
+                                            $line=130;
+                                            $result=$opAdditY("R",s);
+                                            if (true) break $try;
+                                          }
+                                          else {
+                                            $line=131;
+                                            if ($opEqualY(q,"north")) {
+                                              $line=131;
+                                              $result=$opAdditY("N",s);
+                                              if (true) break $try;
+                                            }
+                                            else {
+                                              $line=132;
+                                              if ($opEqualY(q,"south")) {
+                                                $line=132;
+                                                $result=$opAdditY("S",s);
+                                                if (true) break $try;
+                                              }
+                                              else {
+                                                $line=133;
+                                                if ($opEqualY(q,"west")) {
+                                                  $line=133;
+                                                  $result=$opAdditY("W",s);
+                                                  if (true) break $try;
+                                                }
+                                                else {
+                                                  $line=134;
+                                                  if ($opEqualY(q,"east")) {
+                                                    $line=134;
+                                                    $result=$opAdditY("E",s);
+                                                    if (true) break $try;
+                                                  }
+                                                  else {
+                                                    $line=135;
+                                                    if ($opEqualY(q,"around")) {
+                                                      $line=135;
+                                                      $result=$opAdditY("A",s);
+                                                      if (true) break $try;
+                                                    }
+                                                    else {
+                                                      $line=136;
+                                                      if ($opEqualY(q,"balloons")) {
+                                                        $line=136;
+                                                        $result=$opAdditY("B",s);
+                                                        if (true) break $try;
+                                                      }
+                                                      else {
+                                                        $line=137;
+                                                        if ($opEqualY(q,"chips")) {
+                                                          $line=137;
+                                                          $result=$opAdditY("C",s);
+                                                          if (true) break $try;
+                                                        }
+                                                        else {
+                                                          $line=138;
+                                                          if ($opEqualY(q,"Num")) {
+                                                            $line=138;
+                                                            $result=$opAdditY("n",s);
+                                                            if (true) break $try;
+                                                          }
+                                                          else {
+                                                            $line=139;
+                                                            $result=$opAdditY("v",s);
+                                                            if (true) break $try;
+                                                          }
+                                                        }
+                                                      }
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
                                         }
                                       }
                                     }
@@ -391,14 +463,14 @@ public final class Lexer {
         }
       }
       else {
-        $line=133;
+        $line=141;
         $result="";
         if (true) break $try;
       }
-      $line=135;
+      $line=143;
       $result="";
       if (true) break $try;
-      $line=136;
+      $line=144;
       $rethrow(new RuntimeException("The function \"h(q:Object,\u03C3:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -410,23 +482,23 @@ public final class Lexer {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=139;
+      $line=147;
       Object states=$fix(GCollections.emptySet());
-      $line=140;
+      $line=148;
       states=$fix($opUnionY(states,GCollections.asSet(token)));
-      $line=141;
+      $line=149;
       Object sub=$fix($opAdditY($invokeMethod("charAt",token,new Object[]{0}),""));
-      $line=142;
+      $line=150;
       for (int i=$int(1); i<=$int($opSubtrY($opAbsolY(token),1)); i++) {
-        $line=143;
+        $line=151;
         states=$fix($opUnionY(states,GCollections.asSet(sub)));
-        $line=144;
+        $line=152;
         sub=$fix($opAdditY(sub,$invokeMethod("charAt",token,new Object[]{i})));
       }
-      $line=146;
+      $line=154;
       $result=states;
       if (true) break $try;
-      $line=147;
+      $line=155;
       $rethrow(new RuntimeException("The function \"x(token:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
