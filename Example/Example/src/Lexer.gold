@@ -58,7 +58,7 @@ function createTransducer():ITransducer begin
 	// outputs a string of {'(',')','+','*','v','n'}
 	
 	states = {"I"}
-	keywords := {"ROBOT_R", "VARS", "BEGIN", "assignVar", "move", "turn", "face", "put", "pick","moveDir","moveInDir","skip","facing","not", "END","left","right","north","south","west","east","around","balloons","chips"}
+	keywords := {"ROBOT_R", "VARS", "BEGIN", "assignVar", "move", "turn", "face", "put", "pick","moveDir","moveInDir","skip","facing","not", "END","left","right","north","south","west","east","around","balloons","chips","back","front"}
 	for each token∈keywords do
 		states := states ∪ {token}
 		sub := token.charAt(0) + λ
@@ -77,7 +77,7 @@ function createTransducer():ITransducer begin
 end
 
 function δ(q,σ) begin
-	keywords := {"ROBOT_R", "VARS", "BEGIN", "assignVar", "move", "turn", "face", "put", "pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips"}
+	keywords := {"ROBOT_R", "VARS", "BEGIN", "assignVar", "move", "turn", "face", "put", "pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips","back","front"}
 	unary := {"move", "turn" , "face", "moveDir", "facing", "not"}
 	set := Ø
 	for each token∈keywords do
@@ -85,7 +85,7 @@ function δ(q,σ) begin
 	end
 	if (q = "Err") then return "Err"
 	elseif σ ∈ {'(',')',' ', '{','}','[',']', ';',','} then return "I"	
-    elseif q="I" and σ∈{'R','V','B','a','m','t','f','p','s','n','E','L','R','N','S','W','E','A','B','C'} then return String.valueOf(σ)
+    elseif q="I" and σ∈{'R','V','B','a','m','t','f','p','s','n','E','l','r','n','s','w','e','a','b','c','b'} then return String.valueOf(σ)
 	elseif q="I" and σ ∈ ('0' ‥ '9') then return "Num"
 	elseif	q="Num" and σ ∈ ('0' ‥ '9') then return "Num"
 	elseif	q="Num" and σ ∈ ('a' ‥ 'z')∪('A' ‥ 'Z') then return "Err"
@@ -106,7 +106,7 @@ end
 function h(q,σ) begin
 	var s: String
 	s := λ
-	keywords := {"ROBOT_R", "VARS", "BEGIN", "assignVar", "move", "turn", "face", "put", "pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips"}
+	keywords := {"ROBOT_R", "VARS", "BEGIN", "assignVar", "move", "turn", "face", "put", "pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips","back","front"}
 
 	if q ∉ {"Err"} and σ ∈ {'(',')',' ', ';','{','}','[',']',','} then
 		if σ ∉ {' '} then  s=String.valueOf(σ) end
@@ -135,6 +135,8 @@ function h(q,σ) begin
 		elseif q=="around" then return "A"+s
 		elseif q=="balloons" then return "B"+s
 		elseif q=="chips" then return "C"+s
+		elseif q=="front" then return "F"+s
+		elseif q=="back" then return "BK"+s
 		elseif q=="Num" then return "n"+s
 		else return "v"+s
  		end

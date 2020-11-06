@@ -89,7 +89,7 @@ public final class Lexer {
       $line=60;
       Object states=$fix(GCollections.asSet("I"));
       $line=61;
-      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips"));
+      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips","back","front"));
       $line=62;
       for (Object $v1:GCollections.unmodifiableCollection(keywords)) {
         Object token=$v1;
@@ -131,7 +131,7 @@ public final class Lexer {
     Object $result=null;
     $try:try {
       $line=80;
-      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips"));
+      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips","back","front"));
       $line=81;
       Object unary=$fix(GCollections.asSet("move","turn","face","moveDir","facing","not"));
       $line=82;
@@ -157,7 +157,7 @@ public final class Lexer {
         }
         else {
           $line=88;
-          if (($opEqualY(q,"I")&&$opMembrY(\u03C3,GCollections.asSet('R','V','B','a','m','t','f','p','s','n','E','L','R','N','S','W','E','A','B','C')))) {
+          if (($opEqualY(q,"I")&&$opMembrY(\u03C3,GCollections.asSet('R','V','B','a','m','t','f','p','s','n','E','l','r','n','s','w','e','a','b','c','b')))) {
             $line=88;
             $result=$invokeMethod(String.class,"valueOf",true,null,new Object[]{\u03C3});
             if (true) break $try;
@@ -242,7 +242,7 @@ public final class Lexer {
       $line=108;
       s=$cast(String.class,$fix(""));
       $line=109;
-      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips"));
+      Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips","back","front"));
       $line=111;
       if ((!$opMembrY(q,GCollections.asSet("Err"))&&$opMembrY(\u03C3,GCollections.asSet('(',')',' ',';','{','}','[',']',',')))) {
         $line=112;
@@ -426,15 +426,31 @@ public final class Lexer {
                                                         }
                                                         else {
                                                           $line=138;
-                                                          if ($opEqualY(q,"Num")) {
+                                                          if ($opEqualY(q,"front")) {
                                                             $line=138;
-                                                            $result=$opAdditY("n",s);
+                                                            $result=$opAdditY("F",s);
                                                             if (true) break $try;
                                                           }
                                                           else {
                                                             $line=139;
-                                                            $result=$opAdditY("v",s);
-                                                            if (true) break $try;
+                                                            if ($opEqualY(q,"back")) {
+                                                              $line=139;
+                                                              $result=$opAdditY("BK",s);
+                                                              if (true) break $try;
+                                                            }
+                                                            else {
+                                                              $line=140;
+                                                              if ($opEqualY(q,"Num")) {
+                                                                $line=140;
+                                                                $result=$opAdditY("n",s);
+                                                                if (true) break $try;
+                                                              }
+                                                              else {
+                                                                $line=141;
+                                                                $result=$opAdditY("v",s);
+                                                                if (true) break $try;
+                                                              }
+                                                            }
                                                           }
                                                         }
                                                       }
@@ -463,14 +479,14 @@ public final class Lexer {
         }
       }
       else {
-        $line=141;
+        $line=143;
         $result="";
         if (true) break $try;
       }
-      $line=143;
+      $line=145;
       $result="";
       if (true) break $try;
-      $line=144;
+      $line=146;
       $rethrow(new RuntimeException("The function \"h(q:Object,\u03C3:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -482,23 +498,23 @@ public final class Lexer {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=147;
-      Object states=$fix(GCollections.emptySet());
-      $line=148;
-      states=$fix($opUnionY(states,GCollections.asSet(token)));
       $line=149;
-      Object sub=$fix($opAdditY($invokeMethod("charAt",token,new Object[]{0}),""));
+      Object states=$fix(GCollections.emptySet());
       $line=150;
+      states=$fix($opUnionY(states,GCollections.asSet(token)));
+      $line=151;
+      Object sub=$fix($opAdditY($invokeMethod("charAt",token,new Object[]{0}),""));
+      $line=152;
       for (int i=$int(1); i<=$int($opSubtrY($opAbsolY(token),1)); i++) {
-        $line=151;
+        $line=153;
         states=$fix($opUnionY(states,GCollections.asSet(sub)));
-        $line=152;
+        $line=154;
         sub=$fix($opAdditY(sub,$invokeMethod("charAt",token,new Object[]{i})));
       }
-      $line=154;
+      $line=156;
       $result=states;
       if (true) break $try;
-      $line=155;
+      $line=157;
       $rethrow(new RuntimeException("The function \"x(token:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
