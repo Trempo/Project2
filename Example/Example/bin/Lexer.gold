@@ -3,12 +3,14 @@ using gold.visualization.automaton.*
 
 procedure main(args:String[]) begin
     lexer = createTransducer()
-	 testLexer(lexer)
+//   	pushdown = GAutomataFrame.show(create())
+	pushdown = create()
+	 testLexer(lexer,pushdown)
 end
   
         
 
-procedure testLexer(M:ITransducer) begin
+procedure testLexer(M:ITransducer,P:IPushdownAutomaton) begin
 	var sc:java.util.Scanner(System.$in)
     	
 	input = ""
@@ -34,7 +36,15 @@ procedure testLexer(M:ITransducer) begin
 		tokenStream := M.getOutputString()
 		
 		print "The lexer did "+(result?"":"not ")+" accept the string."
-		if result then print "Token Stream: "+ tokenStream end		
+		if result then 
+			
+               print "Token Stream: "+ tokenStream 
+               result:=P.acceptsString(tokenStream )
+         		 print "Parser result: "+(result?"accepted ":"rejected ")
+		
+               
+               
+       end		
 
        print "----------------------------"
 	
@@ -52,7 +62,131 @@ end
 
 
 var names
-  
+ 
+
+function create():IPushdownAutomaton begin
+	params:={'L','R','N','S','W','E','A','b','c','F','v','n','B'}
+	ops:={'r','V','X','Q','m','t','f','p','k','M','I','-','?','!','Y'}
+	Q:= {⟨q,v⟩ | q in ops∪{'S','E','Z', ','}, v in (0‥1)}
+	Σ:={'(',')', '{','}','[',']', ';',','}∪ops∪params
+	Γ:= {'(',')','{','}','[',']','n','v',';'} ∪ params∪{'f','s',',','F'}
+	q₀:=⟨'S',0⟩
+	F:={⟨'Y',v⟩|v in (0‥1)}
+	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
+	
+	M.delta(⟨'S',0⟩,⟨'r',0⟩, 'r').ignore()
+	for each σ ∈ {'X','Q','m','t','f','p','k','M','I','-','?','!'} do
+		M.delta(⟨σ,0⟩,⟨'Y',0⟩,'Y').ignore()
+		M.delta(⟨σ,1⟩,⟨'Y',1⟩,'Y').ignore()
+	end
+	for each σ ∈ {'V','X'} do
+		M.delta(⟨'r',0⟩,⟨σ,0⟩,σ).ignore()
+		M.delta(⟨'S',0⟩,⟨'E',0⟩,σ).ignore()
+		M.delta(⟨'E',0⟩,⟨'E',0⟩,σ).ignore()
+	end
+	for each σ ∈ {'m','t','f'} do
+		M.delta(⟨'S',0⟩,⟨'E',0⟩,σ).ignore()
+		M.delta(⟨'E',0⟩,⟨'E',0⟩,σ).ignore()
+		M.delta(⟨'X',1⟩,⟨σ,1⟩,σ).push("F")
+		M.delta(⟨'X',0⟩,⟨σ,0⟩,σ).push("F")
+		M.delta(⟨σ,0⟩,⟨σ,0⟩,';').pop(';'+λ)
+		M.delta(⟨σ,1⟩,⟨σ,1⟩,';').pop(';'+λ)
+		for each ρ ∈ {'('} do
+				M.delta(⟨σ,0⟩,⟨σ,0⟩,ρ).changeTop("F",ρ+λ)
+				M.delta(⟨σ,1⟩,⟨σ,1⟩,ρ).changeTop("F",ρ+λ)
+				
+				var set
+				if(σ='m')then
+					for each τ ∈ {'v'} do
+						M.delta(⟨σ,0⟩,⟨'E',0⟩,τ).ignore()
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,τ).changeTop(ρ+λ,τ+λ)
+					end
+				set:={'n'}
+				elseif(σ='t')then
+					set := {'L','R','A'}
+				else
+					set := {'N','S','W','E'}
+				end
+				for each τ ∈ set do
+					M.delta(⟨σ,0⟩,⟨σ,0⟩,τ).changeTop(ρ+λ,τ+λ)
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,τ).changeTop(ρ+λ,τ+λ)
+					M.delta(⟨σ,0⟩,⟨σ,0⟩,')').changeTop(τ+λ,";")
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,')').changeTop(τ+λ,";")
+				end
+
+				M.delta(⟨σ,0⟩,⟨'E',0⟩,')').ignore()
+				M.delta(⟨σ,1⟩,⟨σ,1⟩,')').changeTop('v'+λ,";")
+		end	
+	end	
+	
+	for each σ ∈ {'Q','p','k','M','I'} do
+		M.delta(⟨'S',0⟩,⟨'E',0⟩,σ).ignore()
+		M.delta(⟨'E',0⟩,⟨'E',0⟩,σ).ignore()
+		M.delta(⟨'X',1⟩,⟨σ,1⟩,σ).push("F")
+		M.delta(⟨'X',0⟩,⟨σ,0⟩,σ).push("F")
+		M.delta(⟨σ,0⟩,⟨σ,0⟩,';').pop(';'+λ)
+		M.delta(⟨σ,1⟩,⟨σ,1⟩,';').pop(';'+λ)
+		for each ρ ∈ {'('} do
+				M.delta(⟨σ,0⟩,⟨σ,0⟩,ρ).changeTop("F",ρ+λ+"f,s")
+				M.delta(⟨σ,1⟩,⟨σ,1⟩,ρ).changeTop("F",ρ+λ+"f,s")
+				
+				var set
+				if(σ='Q')then
+					M.delta(⟨σ,0⟩,⟨'E',0⟩,'v').ignore()
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,'v').pop('s'+λ)
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,',').pop(','+λ)
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,'n').pop('f'+λ)
+					M.delta(⟨σ,0⟩,⟨'E',0⟩,')').ignore()
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,')').changeTop('('+λ,";")
+				elseif(σ='p' or σ='k')then
+					M.delta(⟨σ,0⟩,⟨'E',0⟩,'v').ignore()
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,'v').pop('s'+λ)
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,'n').pop('s'+λ)
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,',').pop(','+λ)
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,'b').pop('f'+λ)
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,'c').pop('f'+λ)
+					M.delta(⟨σ,0⟩,⟨'E',0⟩,')').ignore()
+					M.delta(⟨σ,1⟩,⟨σ,1⟩,')').changeTop('('+λ,";")
+				elseif(σ='M')then
+						M.delta(⟨σ,0⟩,⟨'E',0⟩,')').ignore()
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,')').changeTop('('+λ,";")
+						M.delta(⟨σ,0⟩,⟨'E',0⟩,'v').ignore()
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,'v').pop('s'+λ)
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,'n').pop('s'+λ)
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,',').pop(','+λ)
+					for each τ ∈ {'F','L','R','B'} do
+
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,τ).pop('f'+λ)
+
+					end
+				elseif(σ='I')then
+						M.delta(⟨σ,0⟩,⟨'E',0⟩,')').ignore()
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,')').changeTop('('+λ,";")
+						M.delta(⟨σ,0⟩,⟨'E',0⟩,'v').ignore()
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,'v').pop('s'+λ)
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,'n').pop('s'+λ)
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,',').pop(','+λ)
+					for each τ ∈ {'W','E','S','N'} do
+						M.delta(⟨σ,1⟩,⟨σ,1⟩,τ).pop('f'+λ)
+
+					end
+				end
+		end	
+	end	
+	
+	M.delta(⟨'V',0⟩,⟨'Z',1⟩,'v').ignore()	
+	M.delta(⟨'Z',1⟩,⟨',',1⟩,',').ignore()
+	M.delta(⟨',',1⟩,⟨'V',1⟩,'v').ignore()
+	
+	M.delta(⟨'V',1⟩,⟨',',1⟩,',').ignore()	
+	M.delta(⟨'V',1⟩,⟨'X',1⟩,'X').ignore()	
+	M.delta(⟨'Z',1⟩,⟨'X',1⟩,'X').ignore()	
+	
+	
+	return M
+end
+
+
 function createTransducer():ITransducer begin
 	// Lexer: reads a string with lower casae letters, digits, parenthesis, and spaces.
 	// outputs a string of {'(',')','+','*','v','n'}
@@ -70,7 +204,7 @@ function createTransducer():ITransducer begin
 	Q:= {"I","Id", "Num","Err"} ∪ states
 	
 	Σ:=('0'‥'9') ∪ ('a' ‥ 'z') ∪ {'(',')',' ',';','{','}','[',']',',','_',':'} ∪ ('A'‥'Z')
-	Out := Σ ∪ ('A'‥'Z')∪ {'?','!'}
+	Out := Σ ∪ ('A'‥'Z')∪ {'?','!','-'}
 	q₀:="I"
 	F:= {"I"}
 	return 	GDeterministicTransducer(Q,Σ,Out,q₀,F,δ,g,h)
@@ -91,7 +225,7 @@ function δ(q,σ) begin
 	elseif	q="Num" and σ ∈ ('a' ‥ 'z')∪('A' ‥ 'Z') then return "Err"
 
 	elseif q∈set and (q+σ)∈set then return q+σ
-	elseif q∈set and (q+σ)∉set then return "Err"
+⧐	elseif q∈set and (q+σ)∉set then return "Err"
     
     else  return "Id"
     end	
@@ -111,21 +245,21 @@ function h(q,σ) begin
 	if q ∉ {"Err"} and σ ∈ {'(',')',' ', ';','{','}','[',']',','} then
 		if σ ∉ {' '} then  s=String.valueOf(σ) end
 		if q=="I" then return s
-    	elseif q=="ROBOT_R" then return "RBT"+s+";" 
-   		elseif q=="VARS" then return "VRS"+s+":"
-   		elseif q=="BEGIN" then return "BG"+s+";"
-   		elseif q=="assignVar" then return "AV"+s
+    	elseif q=="ROBOT_R" then return "r"+s 
+   		elseif q=="VARS" then return "V"+s
+   		elseif q=="BEGIN" then return "X"+s
+   		elseif q=="assignVar" then return "Q"+s
    		elseif q=="move" then return "m"+s
    		elseif q=="turn" then return "t"+s
    		elseif q=="face" then return "f"+s
-   		elseif q=="put" then return "pt"+s
-   		elseif q=="pick" then return "pk"+s
-   		elseif q=="moveDir" then return "MD"+s
-   		elseif q=="moveInDir" then return "MID"+s
-   		elseif q=="skip" then return "sk"+s
-   		elseif q=="facing" then return "f?"+s
+	   		elseif q=="put" then return "p"+s
+   		elseif q=="pick" then return "k"+s
+   		elseif q=="moveDir" then return "M"+s
+   		elseif q=="moveInDir" then return "I"+s
+   		elseif q=="skip" then return "-"+s
+   		elseif q=="facing" then return "?"+s
    		elseif q=="not" then return "!"+s
-   		elseif q=="END" then return "E"+s
+   		elseif q=="END" then return "Y"+s
 		elseif q=="left" then return "L"+s
 		elseif q=="right" then return "R"+s
 		elseif q=="north" then return "N"+s
@@ -133,10 +267,10 @@ function h(q,σ) begin
 		elseif q=="west" then return "W"+s
 		elseif q=="east" then return "E"+s
 		elseif q=="around" then return "A"+s
-		elseif q=="balloons" then return "B"+s
-		elseif q=="chips" then return "C"+s
+		elseif q=="balloons" then return "b"+s
+		elseif q=="chips" then return "c"+s
 		elseif q=="front" then return "F"+s
-		elseif q=="back" then return "BK"+s
+		elseif q=="back" then return "B"+s
 		elseif q=="Num" then return "n"+s
 		else return "v"+s
  		end

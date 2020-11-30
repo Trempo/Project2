@@ -16,64 +16,70 @@ public final class Lexer {
     $try:try {
       $line=5;
       Object lexer=$fix(Lexer.createTransducer());
-      $line=6;
-      Lexer.testLexer($cast(gold.structures.automaton.ITransducer.class,lexer));
+      $line=7;
+      Object pushdown=$fix(Lexer.create());
+      $line=8;
+      Lexer.testLexer($cast(gold.structures.automaton.ITransducer.class,lexer),$cast(gold.structures.automaton.IPushdownAutomaton.class,pushdown));
     }
     catch (Throwable $throwable) {
       $rethrow($throwable,Lexer.class,"main",$line);
     }
   }
-  public static Object testLexer(ITransducer M) {
+  public static Object testLexer(ITransducer M, IPushdownAutomaton P) {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=12;
+      $line=14;
       java.util.Scanner sc=null;
       sc=$invokeConstructor(java.util.Scanner.class,new Object[]{$invokeField(System.class,"in",true,null)});
-      $line=14;
+      $line=16;
       Object input=$fix("");
-      $line=17;
-      System.out.println($message(new Object[]{"----------------------------"}));
-      $line=18;
-      System.out.println($message(new Object[]{"Enter one or more lines. End with a single line with $"}));
       $line=19;
-      System.out.println($message(new Object[]{"If you want to stop testing, enter EXIT"}));
+      System.out.println($message(new Object[]{"----------------------------"}));
       $line=20;
+      System.out.println($message(new Object[]{"Enter one or more lines. End with a single line with $"}));
+      $line=21;
+      System.out.println($message(new Object[]{"If you want to stop testing, enter EXIT"}));
+      $line=22;
       Object string=$fix(((java.util.Scanner)sc).nextLine());
-      $line=24;
+      $line=26;
       while (true) {
         if (!(!$opEqualY(string,"EXIT"))) break;
-        $line=28;
+        $line=30;
         while (true) {
           if (!(!$opEqualY($invokeMethod("charAt",string,new Object[]{0}),'$'))) break;
-          $line=29;
+          $line=31;
           input=$fix($opAdditY($opAdditY(input,string)," "));
-          $line=30;
+          $line=32;
           string=$fix(((java.util.Scanner)sc).nextLine());
         }
-        $line=33;
+        $line=35;
         Object result=$fix(((gold.structures.automaton.ITransducer)M).acceptsString($cast(java.lang.String.class,input)));
-        $line=34;
-        Object tokenStream=$fix(((gold.structures.automaton.ITransducer)M).getOutputString());
         $line=36;
+        Object tokenStream=$fix(((gold.structures.automaton.ITransducer)M).getOutputString());
+        $line=38;
         System.out.println($message(new Object[]{$opAdditY($opAdditY("The lexer did ",(($bool(result))?(""):("not ")))," accept the string.")}));
-        $line=37;
-        if ($bool(result)) {
-          $line=37;
-          System.out.println($message(new Object[]{$opAdditY("Token Stream: ",tokenStream)}));
-        }
         $line=39;
+        if ($bool(result)) {
+          $line=41;
+          System.out.println($message(new Object[]{$opAdditY("Token Stream: ",tokenStream)}));
+          $line=42;
+          result=$fix(((gold.structures.automaton.IPushdownAutomaton)P).acceptsString($cast(java.lang.String.class,tokenStream)));
+          $line=43;
+          System.out.println($message(new Object[]{$opAdditY("Parser result: ",(($bool(result))?("accepted "):("rejected ")))}));
+        }
+        $line=49;
         System.out.println($message(new Object[]{"----------------------------"}));
-        $line=41;
+        $line=51;
         System.out.println($message(new Object[]{"Enter one or more lines. End with a single line with $"}));
-        $line=42;
+        $line=52;
         System.out.println($message(new Object[]{"If you want to stop testing, enter EXIT"}));
-        $line=43;
+        $line=53;
         string=$fix(((java.util.Scanner)sc).nextLine());
       }
-      $line=46;
+      $line=56;
       System.out.println($message(new Object[]{"Good bye"}));
-      $line=47;
+      $line=57;
       System.out.println($message(new Object[]{""}));
     }
     catch (Throwable $throwable) {
@@ -82,43 +88,290 @@ public final class Lexer {
     return $result;
   }
   public static Object names=null;
+  public static IPushdownAutomaton create() {
+    int $line=0;
+    Object $result=null;
+    $try:try {
+      $line=68;
+      Object params=$fix(GCollections.asSet('L','R','N','S','W','E','A','b','c','F','v','n','B'));
+      $line=69;
+      Object ops=$fix(GCollections.asSet('r','V','X','Q','m','t','f','p','k','M','I','-','?','!','Y'));
+      $line=70;
+      gold.structures.set.ISet $v1=$newSet();
+      $v2:for (Object q:GCollections.unmodifiableCollection($opUnionY(ops,GCollections.asSet('S','E','Z',',')))) {
+        for (Object v:GCollections.unmodifiableCollection($opIntvlY(0,1))) {
+          $v1.add(GCollections.asList(q,v));
+        }
+      }
+      Object Q=$fix($v1);
+      $line=71;
+      Object \u03A3=$fix($opUnionY($opUnionY(GCollections.asSet('(',')','{','}','[',']',';',','),ops),params));
+      $line=72;
+      Object \u0393=$fix($opUnionY($opUnionY(GCollections.asSet('(',')','{','}','[',']','n','v',';'),params),GCollections.asSet('f','s',',','F')));
+      $line=73;
+      Object q_0=$fix(GCollections.asList('S',0));
+      $line=74;
+      gold.structures.set.ISet $v3=$newSet();
+      $v4:for (Object v:GCollections.unmodifiableCollection($opIntvlY(0,1))) {
+        $v3.add(GCollections.asList('Y',v));
+      }
+      Object F=$fix($v3);
+      $line=75;
+      Object M=$fix($invokeConstructor(GPushdownAutomaton.class,new Object[]{Q,\u03A3,\u0393,q_0,F}));
+      $line=77;
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('S',0),GCollections.asList('r',0),$cast(java.lang.String.class,'r')),new Object[]{});
+      $line=78;
+      for (Object $v5:GCollections.unmodifiableCollection(GCollections.asSet('X','Q','m','t','f','p','k','M','I','-','?','!'))) {
+        Object \u03C3=$v5;
+        $line=79;
+        $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('Y',0),$cast(java.lang.String.class,'Y')),new Object[]{});
+        $line=80;
+        $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList('Y',1),$cast(java.lang.String.class,'Y')),new Object[]{});
+      }
+      $line=82;
+      for (Object $v6:GCollections.unmodifiableCollection(GCollections.asSet('V','X'))) {
+        Object \u03C3=$v6;
+        $line=83;
+        $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('r',0),GCollections.asList(\u03C3,0),$cast(java.lang.String.class,\u03C3)),new Object[]{});
+        $line=84;
+        $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('S',0),GCollections.asList('E',0),$cast(java.lang.String.class,\u03C3)),new Object[]{});
+        $line=85;
+        $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('E',0),GCollections.asList('E',0),$cast(java.lang.String.class,\u03C3)),new Object[]{});
+      }
+      $line=87;
+      for (Object $v7:GCollections.unmodifiableCollection(GCollections.asSet('m','t','f'))) {
+        Object \u03C3=$v7;
+        $line=88;
+        $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('S',0),GCollections.asList('E',0),$cast(java.lang.String.class,\u03C3)),new Object[]{});
+        $line=89;
+        $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('E',0),GCollections.asList('E',0),$cast(java.lang.String.class,\u03C3)),new Object[]{});
+        $line=90;
+        $invokeMethod("push",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('X',1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,\u03C3)),new Object[]{"F"});
+        $line=91;
+        $invokeMethod("push",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('X',0),GCollections.asList(\u03C3,0),$cast(java.lang.String.class,\u03C3)),new Object[]{"F"});
+        $line=92;
+        $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList(\u03C3,0),$cast(java.lang.String.class,';')),new Object[]{$opAdditY(';',"")});
+        $line=93;
+        $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,';')),new Object[]{$opAdditY(';',"")});
+        $line=94;
+        for (Object $v8:GCollections.unmodifiableCollection(GCollections.asSet('('))) {
+          Object \u03C1=$v8;
+          $line=95;
+          $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList(\u03C3,0),$cast(java.lang.String.class,\u03C1)),new Object[]{"F",$opAdditY(\u03C1,"")});
+          $line=96;
+          $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,\u03C1)),new Object[]{"F",$opAdditY(\u03C1,"")});
+          $line=98;
+          Object set=null;
+          $line=99;
+          if ($bool($opEqualY(\u03C3,'m'))) {
+            $line=100;
+            for (Object $v9:GCollections.unmodifiableCollection(GCollections.asSet('v'))) {
+              Object \u03C4=$v9;
+              $line=101;
+              $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,\u03C4)),new Object[]{});
+              $line=102;
+              $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,\u03C4)),new Object[]{$opAdditY(\u03C1,""),$opAdditY(\u03C4,"")});
+            }
+            $line=104;
+            set=$fix(GCollections.asSet('n'));
+          }
+          else {
+            $line=105;
+            if ($bool($opEqualY(\u03C3,'t'))) {
+              $line=106;
+              set=$fix(GCollections.asSet('L','R','A'));
+            }
+            else {
+              $line=108;
+              set=$fix(GCollections.asSet('N','S','W','E'));
+            }
+          }
+          $line=110;
+          for (Object $v10:GCollections.unmodifiableCollection(set)) {
+            Object \u03C4=$v10;
+            $line=111;
+            $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList(\u03C3,0),$cast(java.lang.String.class,\u03C4)),new Object[]{$opAdditY(\u03C1,""),$opAdditY(\u03C4,"")});
+            $line=112;
+            $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,\u03C4)),new Object[]{$opAdditY(\u03C1,""),$opAdditY(\u03C4,"")});
+            $line=113;
+            $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList(\u03C3,0),$cast(java.lang.String.class,')')),new Object[]{$opAdditY(\u03C4,""),";"});
+            $line=114;
+            $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,')')),new Object[]{$opAdditY(\u03C4,""),";"});
+          }
+          $line=117;
+          $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,')')),new Object[]{});
+          $line=118;
+          $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,')')),new Object[]{$opAdditY('v',""),";"});
+        }
+      }
+      $line=122;
+      for (Object $v11:GCollections.unmodifiableCollection(GCollections.asSet('Q','p','k','M','I'))) {
+        Object \u03C3=$v11;
+        $line=123;
+        $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('S',0),GCollections.asList('E',0),$cast(java.lang.String.class,\u03C3)),new Object[]{});
+        $line=124;
+        $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('E',0),GCollections.asList('E',0),$cast(java.lang.String.class,\u03C3)),new Object[]{});
+        $line=125;
+        $invokeMethod("push",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('X',1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,\u03C3)),new Object[]{"F"});
+        $line=126;
+        $invokeMethod("push",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('X',0),GCollections.asList(\u03C3,0),$cast(java.lang.String.class,\u03C3)),new Object[]{"F"});
+        $line=127;
+        $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList(\u03C3,0),$cast(java.lang.String.class,';')),new Object[]{$opAdditY(';',"")});
+        $line=128;
+        $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,';')),new Object[]{$opAdditY(';',"")});
+        $line=129;
+        for (Object $v12:GCollections.unmodifiableCollection(GCollections.asSet('('))) {
+          Object \u03C1=$v12;
+          $line=130;
+          $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList(\u03C3,0),$cast(java.lang.String.class,\u03C1)),new Object[]{"F",$opAdditY($opAdditY(\u03C1,""),"f,s")});
+          $line=131;
+          $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,\u03C1)),new Object[]{"F",$opAdditY($opAdditY(\u03C1,""),"f,s")});
+          $line=133;
+          Object set=null;
+          $line=134;
+          if ($bool($opEqualY(\u03C3,'Q'))) {
+            $line=135;
+            $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,'v')),new Object[]{});
+            $line=136;
+            $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'v')),new Object[]{$opAdditY('s',"")});
+            $line=137;
+            $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,',')),new Object[]{$opAdditY(',',"")});
+            $line=138;
+            $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'n')),new Object[]{$opAdditY('f',"")});
+            $line=139;
+            $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,')')),new Object[]{});
+            $line=140;
+            $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,')')),new Object[]{$opAdditY('(',""),";"});
+          }
+          else {
+            $line=141;
+            if ($bool(($opEqualY(\u03C3,'p')||$opEqualY(\u03C3,'k')))) {
+              $line=142;
+              $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,'v')),new Object[]{});
+              $line=143;
+              $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'v')),new Object[]{$opAdditY('s',"")});
+              $line=144;
+              $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'n')),new Object[]{$opAdditY('s',"")});
+              $line=145;
+              $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,',')),new Object[]{$opAdditY(',',"")});
+              $line=146;
+              $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'b')),new Object[]{$opAdditY('f',"")});
+              $line=147;
+              $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'c')),new Object[]{$opAdditY('f',"")});
+              $line=148;
+              $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,')')),new Object[]{});
+              $line=149;
+              $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,')')),new Object[]{$opAdditY('(',""),";"});
+            }
+            else {
+              $line=150;
+              if ($bool($opEqualY(\u03C3,'M'))) {
+                $line=151;
+                $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,')')),new Object[]{});
+                $line=152;
+                $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,')')),new Object[]{$opAdditY('(',""),";"});
+                $line=153;
+                $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,'v')),new Object[]{});
+                $line=154;
+                $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'v')),new Object[]{$opAdditY('s',"")});
+                $line=155;
+                $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'n')),new Object[]{$opAdditY('s',"")});
+                $line=156;
+                $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,',')),new Object[]{$opAdditY(',',"")});
+                $line=157;
+                for (Object $v13:GCollections.unmodifiableCollection(GCollections.asSet('F','L','R','B'))) {
+                  Object \u03C4=$v13;
+                  $line=159;
+                  $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,\u03C4)),new Object[]{$opAdditY('f',"")});
+                }
+              }
+              else {
+                $line=162;
+                if ($bool($opEqualY(\u03C3,'I'))) {
+                  $line=163;
+                  $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,')')),new Object[]{});
+                  $line=164;
+                  $invokeMethod("changeTop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,')')),new Object[]{$opAdditY('(',""),";"});
+                  $line=165;
+                  $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('E',0),$cast(java.lang.String.class,'v')),new Object[]{});
+                  $line=166;
+                  $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'v')),new Object[]{$opAdditY('s',"")});
+                  $line=167;
+                  $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,'n')),new Object[]{$opAdditY('s',"")});
+                  $line=168;
+                  $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,',')),new Object[]{$opAdditY(',',"")});
+                  $line=169;
+                  for (Object $v14:GCollections.unmodifiableCollection(GCollections.asSet('W','E','S','N'))) {
+                    Object \u03C4=$v14;
+                    $line=170;
+                    $invokeMethod("pop",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,1),GCollections.asList(\u03C3,1),$cast(java.lang.String.class,\u03C4)),new Object[]{$opAdditY('f',"")});
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      $line=177;
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('V',0),GCollections.asList('Z',1),$cast(java.lang.String.class,'v')),new Object[]{});
+      $line=178;
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('Z',1),GCollections.asList(',',1),$cast(java.lang.String.class,',')),new Object[]{});
+      $line=179;
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(',',1),GCollections.asList('V',1),$cast(java.lang.String.class,'v')),new Object[]{});
+      $line=181;
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('V',1),GCollections.asList(',',1),$cast(java.lang.String.class,',')),new Object[]{});
+      $line=182;
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('V',1),GCollections.asList('X',1),$cast(java.lang.String.class,'X')),new Object[]{});
+      $line=183;
+      $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('Z',1),GCollections.asList('X',1),$cast(java.lang.String.class,'X')),new Object[]{});
+      $line=186;
+      $result=M;
+      if (true) break $try;
+      $line=187;
+      $rethrow(new RuntimeException("The function \"create()\" did not return a value."));
+    }
+    catch (Throwable $throwable) {
+      $rethrow($throwable,Lexer.class,"create",$line);
+    }
+    return $cast(IPushdownAutomaton.class,$result);
+  }
   public static ITransducer createTransducer() {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=60;
+      $line=194;
       Object states=$fix(GCollections.asSet("I"));
-      $line=61;
+      $line=195;
       Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips","back","front"));
-      $line=62;
-      for (Object $v1:GCollections.unmodifiableCollection(keywords)) {
-        Object token=$v1;
-        $line=63;
+      $line=196;
+      for (Object $v15:GCollections.unmodifiableCollection(keywords)) {
+        Object token=$v15;
+        $line=197;
         states=$fix($opUnionY(states,GCollections.asSet(token)));
-        $line=64;
+        $line=198;
         Object sub=$fix($opAdditY($invokeMethod("charAt",token,new Object[]{0}),""));
-        $line=65;
+        $line=199;
         for (int i=$int(1); i<=$int($opSubtrY($opAbsolY(token),1)); i++) {
-          $line=66;
+          $line=200;
           states=$fix($opUnionY(states,GCollections.asSet(sub)));
-          $line=67;
+          $line=201;
           sub=$fix($opAdditY(sub,$invokeMethod("charAt",token,new Object[]{i})));
         }
       }
-      $line=70;
+      $line=204;
       Object Q=$fix($opUnionY(GCollections.asSet("I","Id","Num","Err"),states));
-      $line=72;
+      $line=206;
       Object \u03A3=$fix($opUnionY($opUnionY($opUnionY($opIntvlY('0','9'),$opIntvlY('a','z')),GCollections.asSet('(',')',' ',';','{','}','[',']',',','_',':')),$opIntvlY('A','Z')));
-      $line=73;
-      Object Out=$fix($opUnionY($opUnionY(\u03A3,$opIntvlY('A','Z')),GCollections.asSet('?','!')));
-      $line=74;
+      $line=207;
+      Object Out=$fix($opUnionY($opUnionY(\u03A3,$opIntvlY('A','Z')),GCollections.asSet('?','!','-')));
+      $line=208;
       Object q_0=$fix("I");
-      $line=75;
+      $line=209;
       Object F=$fix(GCollections.asSet("I"));
-      $line=76;
+      $line=210;
       $result=$invokeConstructor(GDeterministicTransducer.class,new Object[]{Q,\u03A3,Out,q_0,F,new GMethod(Lexer.class,"\u03B4"),new GMethod(Lexer.class,"g"),new GMethod(Lexer.class,"h")});
       if (true) break $try;
-      $line=77;
+      $line=211;
       $rethrow(new RuntimeException("The function \"createTransducer()\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -130,78 +383,70 @@ public final class Lexer {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=80;
+      $line=214;
       Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips","back","front"));
-      $line=81;
+      $line=215;
       Object unary=$fix(GCollections.asSet("move","turn","face","moveDir","facing","not"));
-      $line=82;
+      $line=216;
       Object set=$fix(GCollections.emptySet());
-      $line=83;
-      for (Object $v2:GCollections.unmodifiableCollection(keywords)) {
-        Object token=$v2;
-        $line=84;
+      $line=217;
+      for (Object $v16:GCollections.unmodifiableCollection(keywords)) {
+        Object token=$v16;
+        $line=218;
         set=$fix($opUnionY(set,Lexer.x(token)));
       }
-      $line=86;
+      $line=220;
       if ($bool($opEqualY(q,"Err"))) {
-        $line=86;
+        $line=220;
         $result="Err";
         if (true) break $try;
       }
       else {
-        $line=87;
+        $line=221;
         if ($opMembrY(\u03C3,GCollections.asSet('(',')',' ','{','}','[',']',';',','))) {
-          $line=87;
+          $line=221;
           $result="I";
           if (true) break $try;
         }
         else {
-          $line=88;
+          $line=222;
           if (($opEqualY(q,"I")&&$opMembrY(\u03C3,GCollections.asSet('R','V','B','a','m','t','f','p','s','n','E','l','r','n','s','w','e','a','b','c','b')))) {
-            $line=88;
+            $line=222;
             $result=$invokeMethod(String.class,"valueOf",true,null,new Object[]{\u03C3});
             if (true) break $try;
           }
           else {
-            $line=89;
+            $line=223;
             if (($opEqualY(q,"I")&&$opMembrY(\u03C3,$opIntvlY('0','9')))) {
-              $line=89;
+              $line=223;
               $result="Num";
               if (true) break $try;
             }
             else {
-              $line=90;
+              $line=224;
               if (($opEqualY(q,"Num")&&$opMembrY(\u03C3,$opIntvlY('0','9')))) {
-                $line=90;
+                $line=224;
                 $result="Num";
                 if (true) break $try;
               }
               else {
-                $line=91;
+                $line=225;
                 if (($opEqualY(q,"Num")&&$opMembrY(\u03C3,$opUnionY($opIntvlY('a','z'),$opIntvlY('A','Z'))))) {
-                  $line=91;
+                  $line=225;
                   $result="Err";
                   if (true) break $try;
                 }
                 else {
-                  $line=93;
+                  $line=227;
                   if (($opMembrY(q,set)&&$opMembrY($opAdditY(q,\u03C3),set))) {
-                    $line=93;
+                    $line=227;
                     $result=$opAdditY(q,\u03C3);
                     if (true) break $try;
                   }
                   else {
-                    $line=94;
-                    if (($opMembrY(q,set)&&!$opMembrY($opAdditY(q,\u03C3),set))) {
-                      $line=94;
-                      $result="Err";
-                      if (true) break $try;
-                    }
-                    else {
-                      $line=96;
-                      $result="Id";
-                      if (true) break $try;
-                    }
+                    $line=230;
+                    $result="Id";
+                    if (true) break $try;
                   }
                 }
               }
@@ -209,7 +454,7 @@ public final class Lexer {
           }
         }
       }
-      $line=98;
+      $line=232;
       $rethrow(new RuntimeException("The function \"\u03B4(q:Object,\u03C3:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -221,10 +466,10 @@ public final class Lexer {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=103;
+      $line=237;
       $result="";
       if (true) break $try;
-      $line=104;
+      $line=238;
       $rethrow(new RuntimeException("The function \"g(q:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -236,217 +481,217 @@ public final class Lexer {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=107;
+      $line=241;
       String s=null;
       s=$defaultValue(String.class);
-      $line=108;
+      $line=242;
       s=$cast(String.class,$fix(""));
-      $line=109;
+      $line=243;
       Object keywords=$fix(GCollections.asSet("ROBOT_R","VARS","BEGIN","assignVar","move","turn","face","put","pick","moveDir","moveInDir","skip","facing","not","END","left","right","north","south","west","east","around","balloons","chips","back","front"));
-      $line=111;
+      $line=245;
       if ((!$opMembrY(q,GCollections.asSet("Err"))&&$opMembrY(\u03C3,GCollections.asSet('(',')',' ',';','{','}','[',']',',')))) {
-        $line=112;
+        $line=246;
         if (!$opMembrY(\u03C3,GCollections.asSet(' '))) {
-          $line=112;
+          $line=246;
           s=$cast(String.class,$fix($invokeMethod(String.class,"valueOf",true,null,new Object[]{\u03C3})));
         }
-        $line=113;
+        $line=247;
         if ($opEqualY(q,"I")) {
-          $line=113;
+          $line=247;
           $result=s;
           if (true) break $try;
         }
         else {
-          $line=114;
+          $line=248;
           if ($opEqualY(q,"ROBOT_R")) {
-            $line=114;
-            $result=$opAdditY($opAdditY("RBT",s),";");
+            $line=248;
+            $result=$opAdditY("r",s);
             if (true) break $try;
           }
           else {
-            $line=115;
+            $line=249;
             if ($opEqualY(q,"VARS")) {
-              $line=115;
-              $result=$opAdditY($opAdditY("VRS",s),":");
+              $line=249;
+              $result=$opAdditY("V",s);
               if (true) break $try;
             }
             else {
-              $line=116;
+              $line=250;
               if ($opEqualY(q,"BEGIN")) {
-                $line=116;
-                $result=$opAdditY($opAdditY("BG",s),";");
+                $line=250;
+                $result=$opAdditY("X",s);
                 if (true) break $try;
               }
               else {
-                $line=117;
+                $line=251;
                 if ($opEqualY(q,"assignVar")) {
-                  $line=117;
-                  $result=$opAdditY("AV",s);
+                  $line=251;
+                  $result=$opAdditY("Q",s);
                   if (true) break $try;
                 }
                 else {
-                  $line=118;
+                  $line=252;
                   if ($opEqualY(q,"move")) {
-                    $line=118;
+                    $line=252;
                     $result=$opAdditY("m",s);
                     if (true) break $try;
                   }
                   else {
-                    $line=119;
+                    $line=253;
                     if ($opEqualY(q,"turn")) {
-                      $line=119;
+                      $line=253;
                       $result=$opAdditY("t",s);
                       if (true) break $try;
                     }
                     else {
-                      $line=120;
+                      $line=254;
                       if ($opEqualY(q,"face")) {
-                        $line=120;
+                        $line=254;
                         $result=$opAdditY("f",s);
                         if (true) break $try;
                       }
                       else {
-                        $line=121;
+                        $line=255;
                         if ($opEqualY(q,"put")) {
-                          $line=121;
-                          $result=$opAdditY("pt",s);
+                          $line=255;
+                          $result=$opAdditY("p",s);
                           if (true) break $try;
                         }
                         else {
-                          $line=122;
+                          $line=256;
                           if ($opEqualY(q,"pick")) {
-                            $line=122;
-                            $result=$opAdditY("pk",s);
+                            $line=256;
+                            $result=$opAdditY("k",s);
                             if (true) break $try;
                           }
                           else {
-                            $line=123;
+                            $line=257;
                             if ($opEqualY(q,"moveDir")) {
-                              $line=123;
-                              $result=$opAdditY("MD",s);
+                              $line=257;
+                              $result=$opAdditY("M",s);
                               if (true) break $try;
                             }
                             else {
-                              $line=124;
+                              $line=258;
                               if ($opEqualY(q,"moveInDir")) {
-                                $line=124;
-                                $result=$opAdditY("MID",s);
+                                $line=258;
+                                $result=$opAdditY("I",s);
                                 if (true) break $try;
                               }
                               else {
-                                $line=125;
+                                $line=259;
                                 if ($opEqualY(q,"skip")) {
-                                  $line=125;
-                                  $result=$opAdditY("sk",s);
+                                  $line=259;
+                                  $result=$opAdditY("-",s);
                                   if (true) break $try;
                                 }
                                 else {
-                                  $line=126;
+                                  $line=260;
                                   if ($opEqualY(q,"facing")) {
-                                    $line=126;
-                                    $result=$opAdditY("f?",s);
+                                    $line=260;
+                                    $result=$opAdditY("?",s);
                                     if (true) break $try;
                                   }
                                   else {
-                                    $line=127;
+                                    $line=261;
                                     if ($opEqualY(q,"not")) {
-                                      $line=127;
+                                      $line=261;
                                       $result=$opAdditY("!",s);
                                       if (true) break $try;
                                     }
                                     else {
-                                      $line=128;
+                                      $line=262;
                                       if ($opEqualY(q,"END")) {
-                                        $line=128;
-                                        $result=$opAdditY("E",s);
+                                        $line=262;
+                                        $result=$opAdditY("Y",s);
                                         if (true) break $try;
                                       }
                                       else {
-                                        $line=129;
+                                        $line=263;
                                         if ($opEqualY(q,"left")) {
-                                          $line=129;
+                                          $line=263;
                                           $result=$opAdditY("L",s);
                                           if (true) break $try;
                                         }
                                         else {
-                                          $line=130;
+                                          $line=264;
                                           if ($opEqualY(q,"right")) {
-                                            $line=130;
+                                            $line=264;
                                             $result=$opAdditY("R",s);
                                             if (true) break $try;
                                           }
                                           else {
-                                            $line=131;
+                                            $line=265;
                                             if ($opEqualY(q,"north")) {
-                                              $line=131;
+                                              $line=265;
                                               $result=$opAdditY("N",s);
                                               if (true) break $try;
                                             }
                                             else {
-                                              $line=132;
+                                              $line=266;
                                               if ($opEqualY(q,"south")) {
-                                                $line=132;
+                                                $line=266;
                                                 $result=$opAdditY("S",s);
                                                 if (true) break $try;
                                               }
                                               else {
-                                                $line=133;
+                                                $line=267;
                                                 if ($opEqualY(q,"west")) {
-                                                  $line=133;
+                                                  $line=267;
                                                   $result=$opAdditY("W",s);
                                                   if (true) break $try;
                                                 }
                                                 else {
-                                                  $line=134;
+                                                  $line=268;
                                                   if ($opEqualY(q,"east")) {
-                                                    $line=134;
+                                                    $line=268;
                                                     $result=$opAdditY("E",s);
                                                     if (true) break $try;
                                                   }
                                                   else {
-                                                    $line=135;
+                                                    $line=269;
                                                     if ($opEqualY(q,"around")) {
-                                                      $line=135;
+                                                      $line=269;
                                                       $result=$opAdditY("A",s);
                                                       if (true) break $try;
                                                     }
                                                     else {
-                                                      $line=136;
+                                                      $line=270;
                                                       if ($opEqualY(q,"balloons")) {
-                                                        $line=136;
-                                                        $result=$opAdditY("B",s);
+                                                        $line=270;
+                                                        $result=$opAdditY("b",s);
                                                         if (true) break $try;
                                                       }
                                                       else {
-                                                        $line=137;
+                                                        $line=271;
                                                         if ($opEqualY(q,"chips")) {
-                                                          $line=137;
-                                                          $result=$opAdditY("C",s);
+                                                          $line=271;
+                                                          $result=$opAdditY("c",s);
                                                           if (true) break $try;
                                                         }
                                                         else {
-                                                          $line=138;
+                                                          $line=272;
                                                           if ($opEqualY(q,"front")) {
-                                                            $line=138;
+                                                            $line=272;
                                                             $result=$opAdditY("F",s);
                                                             if (true) break $try;
                                                           }
                                                           else {
-                                                            $line=139;
+                                                            $line=273;
                                                             if ($opEqualY(q,"back")) {
-                                                              $line=139;
-                                                              $result=$opAdditY("BK",s);
+                                                              $line=273;
+                                                              $result=$opAdditY("B",s);
                                                               if (true) break $try;
                                                             }
                                                             else {
-                                                              $line=140;
+                                                              $line=274;
                                                               if ($opEqualY(q,"Num")) {
-                                                                $line=140;
+                                                                $line=274;
                                                                 $result=$opAdditY("n",s);
                                                                 if (true) break $try;
                                                               }
                                                               else {
-                                                                $line=141;
+                                                                $line=275;
                                                                 $result=$opAdditY("v",s);
                                                                 if (true) break $try;
                                                               }
@@ -479,14 +724,14 @@ public final class Lexer {
         }
       }
       else {
-        $line=143;
+        $line=277;
         $result="";
         if (true) break $try;
       }
-      $line=145;
+      $line=279;
       $result="";
       if (true) break $try;
-      $line=146;
+      $line=280;
       $rethrow(new RuntimeException("The function \"h(q:Object,\u03C3:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
@@ -498,23 +743,23 @@ public final class Lexer {
     int $line=0;
     Object $result=null;
     $try:try {
-      $line=149;
+      $line=283;
       Object states=$fix(GCollections.emptySet());
-      $line=150;
+      $line=284;
       states=$fix($opUnionY(states,GCollections.asSet(token)));
-      $line=151;
+      $line=285;
       Object sub=$fix($opAdditY($invokeMethod("charAt",token,new Object[]{0}),""));
-      $line=152;
+      $line=286;
       for (int i=$int(1); i<=$int($opSubtrY($opAbsolY(token),1)); i++) {
-        $line=153;
+        $line=287;
         states=$fix($opUnionY(states,GCollections.asSet(sub)));
-        $line=154;
+        $line=288;
         sub=$fix($opAdditY(sub,$invokeMethod("charAt",token,new Object[]{i})));
       }
-      $line=156;
+      $line=290;
       $result=states;
       if (true) break $try;
-      $line=157;
+      $line=291;
       $rethrow(new RuntimeException("The function \"x(token:Object)\" did not return a value."));
     }
     catch (Throwable $throwable) {
