@@ -79,6 +79,7 @@ function create():IPushdownAutomaton begin
 		M.delta(⟨σ,0⟩,⟨'Y',0⟩,'Y').ignore()
 		M.delta(⟨σ,1⟩,⟨'Y',1⟩,'Y').ignore()
 	end
+
 	for each σ ∈ {'V','X'} do
 		M.delta(⟨'r',0⟩,⟨σ,0⟩,σ).ignore()
 		M.delta(⟨'S',0⟩,⟨'E',0⟩,σ).ignore()
@@ -87,6 +88,10 @@ function create():IPushdownAutomaton begin
 	for each σ ∈ {'m','t','f'} do
 		M.delta(⟨'S',0⟩,⟨'E',0⟩,σ).ignore()
 		M.delta(⟨'E',0⟩,⟨'E',0⟩,σ).ignore()
+		for each α ∈ {'Q','m','t','f','p','k','M','I','-','?','!'}\{σ} do
+			M.delta(⟨α,1⟩,⟨σ,1⟩,σ).push("F")
+			M.delta(⟨α,0⟩,⟨σ,0⟩,σ).push("F")
+		end
 		M.delta(⟨'X',1⟩,⟨σ,1⟩,σ).push("F")
 		M.delta(⟨'X',0⟩,⟨σ,0⟩,σ).push("F")
 		M.delta(⟨σ,0⟩,⟨σ,0⟩,';').pop(';'+λ)
@@ -122,6 +127,10 @@ function create():IPushdownAutomaton begin
 	for each σ ∈ {'Q','p','k','M','I'} do
 		M.delta(⟨'S',0⟩,⟨'E',0⟩,σ).ignore()
 		M.delta(⟨'E',0⟩,⟨'E',0⟩,σ).ignore()
+		for each α ∈ {'Q','m','t','f','p','k','M','I','-','?','!'}\{σ} do
+			M.delta(⟨α,1⟩,⟨σ,1⟩,σ).push("F")
+			M.delta(⟨α,0⟩,⟨σ,0⟩,σ).push("F")
+		end
 		M.delta(⟨'X',1⟩,⟨σ,1⟩,σ).push("F")
 		M.delta(⟨'X',0⟩,⟨σ,0⟩,σ).push("F")
 		M.delta(⟨σ,0⟩,⟨σ,0⟩,';').pop(';'+λ)
