@@ -121,7 +121,7 @@ public final class Lexer {
       $line=77;
       $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList('S',0),GCollections.asList('r',0),$cast(java.lang.String.class,'r')),new Object[]{});
       $line=78;
-      for (Object $v5:GCollections.unmodifiableCollection(GCollections.asSet('X','Q','m','t','f','p','k','M','I','-','?','!'))) {
+      for (Object $v5:GCollections.unmodifiableCollection(GCollections.asSet('X','Q','m','t','f','p','k','M','I','-','?'))) {
         Object \u03C3=$v5;
         $line=79;
         $invokeMethod("ignore",((gold.structures.automaton.GPushdownAutomaton)M).delta(GCollections.asList(\u03C3,0),GCollections.asList('Y',0),$cast(java.lang.String.class,'Y')),new Object[]{});

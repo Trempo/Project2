@@ -75,7 +75,7 @@ function create():IPushdownAutomaton begin
 	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
 	
 	M.delta(⟨'S',0⟩,⟨'r',0⟩, 'r').ignore()
-	for each σ ∈ {'X','Q','m','t','f','p','k','M','I','-','?','!'} do
+	for each σ ∈ {'X','Q','m','t','f','p','k','M','I','-','?'} do
 		M.delta(⟨σ,0⟩,⟨'Y',0⟩,'Y').ignore()
 		M.delta(⟨σ,1⟩,⟨'Y',1⟩,'Y').ignore()
 		
