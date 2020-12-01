@@ -69,7 +69,7 @@ function create():IPushdownAutomaton begin
 	ops:={'r','V','X','Q','m','t','f','p','k','M','I','-','?','!','Y'}
 	Q:= {⟨q,v⟩ | q in ops∪{'S','E','Z', ','}, v in (0‥1)}
 	Σ:={'(',')', '{','}','[',']', ';',','}∪ops∪params
-	Γ:= {'(',')','{','}','[',']','n','v',';'} ∪ params∪{'f','s',',','F'}
+	Γ:= {'(',')','{','}','[',']','n','v',';'} ∪ params∪{'f','s',',','F','!','?'}
 	q₀:=⟨'S',0⟩
 	F:={⟨'Y',v⟩|v in (0‥1)}
 	M:=GPushdownAutomaton(Q,Σ,Γ,q₀,F)
@@ -78,6 +78,24 @@ function create():IPushdownAutomaton begin
 	for each σ ∈ {'X','Q','m','t','f','p','k','M','I','-','?','!'} do
 		M.delta(⟨σ,0⟩,⟨'Y',0⟩,'Y').ignore()
 		M.delta(⟨σ,1⟩,⟨'Y',1⟩,'Y').ignore()
+		
+		M.delta(⟨σ,1⟩,⟨σ,1⟩,'{').push("{")
+		M.delta(⟨σ,1⟩,⟨σ,1⟩,'}').pop("{")
+		M.delta(⟨σ,0⟩,⟨σ,0⟩,'{').push("{")
+		M.delta(⟨σ,0⟩,⟨σ,0⟩,'}').pop("{")
+		
+		M.delta(⟨σ,1⟩,⟨σ,1⟩,'[').push("[")
+		M.delta(⟨σ,1⟩,⟨σ,1⟩,']').pop("[")
+		M.delta(⟨σ,0⟩,⟨σ,0⟩,'[').push("[")
+		M.delta(⟨σ,0⟩,⟨σ,0⟩,']').pop("[")
+		
+		
+		for each α ∈ {0,1} do
+			M.delta(⟨σ,α⟩,⟨σ,α⟩,'!').push("!")
+			M.delta(⟨σ,α⟩,⟨σ,α⟩,'(').changeTop("!","(")
+			M.delta(⟨σ,α⟩,⟨σ,α⟩,')').pop("(")
+		end
+		
 	end
 
 	for each σ ∈ {'V','X'} do
@@ -85,10 +103,10 @@ function create():IPushdownAutomaton begin
 		M.delta(⟨'S',0⟩,⟨'E',0⟩,σ).ignore()
 		M.delta(⟨'E',0⟩,⟨'E',0⟩,σ).ignore()
 	end
-	for each σ ∈ {'m','t','f'} do
+	for each σ ∈ {'m','t','f','?'} do
 		M.delta(⟨'S',0⟩,⟨'E',0⟩,σ).ignore()
 		M.delta(⟨'E',0⟩,⟨'E',0⟩,σ).ignore()
-		for each α ∈ {'Q','m','t','f','p','k','M','I','-','?','!'}\{σ} do
+		for each α ∈ {'Q','m','t','f','p','k','M','I','-','?','!'} do
 			M.delta(⟨α,1⟩,⟨σ,1⟩,σ).push("F")
 			M.delta(⟨α,0⟩,⟨σ,0⟩,σ).push("F")
 		end
@@ -106,7 +124,7 @@ function create():IPushdownAutomaton begin
 						M.delta(⟨σ,0⟩,⟨'E',0⟩,τ).ignore()
 						M.delta(⟨σ,1⟩,⟨σ,1⟩,τ).changeTop(ρ+λ,τ+λ)
 					end
-				set:={'n'}
+					set:={'n'}
 				elseif(σ='t')then
 					set := {'L','R','A'}
 				else
@@ -127,7 +145,7 @@ function create():IPushdownAutomaton begin
 	for each σ ∈ {'Q','p','k','M','I'} do
 		M.delta(⟨'S',0⟩,⟨'E',0⟩,σ).ignore()
 		M.delta(⟨'E',0⟩,⟨'E',0⟩,σ).ignore()
-		for each α ∈ {'Q','m','t','f','p','k','M','I','-','?','!'}\{σ} do
+		for each α ∈ {'Q','m','t','f','p','k','M','I','-','?','!'} do
 			M.delta(⟨α,1⟩,⟨σ,1⟩,σ).push("F")
 			M.delta(⟨α,0⟩,⟨σ,0⟩,σ).push("F")
 		end
